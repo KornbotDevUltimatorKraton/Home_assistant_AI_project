@@ -7,11 +7,13 @@ from deep_translator import GoogleTranslator
 from flask import Flask,render_template,url_for,redirect,request,jsonify 
 print(sys.path)
 app = Flask(__name__)
-#Room State switch 
+#Room State switch
+roomlist = ["Room1","Room2","Room3","Room4"] 
 state_sw = {"Room1":{"sw1":"OFF","sw2":"OFF","sw3":"OFF"},
             "Room2":{"sw1":"OFF","sw2":"OFF","sw3":"OFF"},
             "Room3":{"sw1":"OFF","sw2":"OFF","sw3":"OFF"},
             "Room4":{"sw1":"OFF","sw2":"OFF","sw3":"OFF"},
+            "All_room":{"sw1":"OFF","sw2":"OFF","sw3":"OFF"},
             "Door1":{"sw1":"OFF","sw2":"OFF","sw3":"OFF"}
             }
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
@@ -24,10 +26,12 @@ word_dbsim = {"Turn on the light in room 1":"Room1",
               "Turn off the light in room 2":"Room2",
               "Turn off the light in room 3":"Room3",
               "Turn off the light in room 4":"Room4",
+              "Turn on all room lights":"All_room",
+              "Turn off all room lights":"All_room", 
               "Open the door 1":"Door1",
               "Close the door 1":"Door1" 
              }  
-ref_state = {"Turn on the light in room":"ON","Turn off the light in room":"OFF","Open the door":"Open","Close the door":"Close"}
+ref_state = {"Turn on the light in room":"ON","Turn off the light in room":"OFF","Turn off all room lights":"Turn off all light","Turn on all room lights":"Turn on all light","Open the door":"Open","Close the door":"Close"}
 def wordintersection(list1,list2):
         set1 = set(list1)
         set2 = set(list2)
@@ -102,13 +106,25 @@ def speech_assistant_ai():
         state_sw.get(Control_Selected)["sw1"] = "OFF"
         state_sw.get(Control_Selected)["sw2"] = "OFF"
         state_sw.get(Control_Selected)["sw3"] = "OFF" 
+     if Statedata_Selected == "Turn off all light":
+        #roomlist = ["Room1","Room2","Room3","Room4"]
+        for rm in roomlist:
+            state_sw.get(rm)["sw1"] = "OFF"
+            state_sw.get(rm)["sw2"] = "OFF"
+            state_sw.get(rm)["sw3"] = "OFF"       
+     if Statedata_Selected == "Turn on all light":
+        #roomlist = ["Room1","Room2","Room3","Room4"]
+        for rm in roomlist:
+            state_sw.get(rm)["sw1"] = "ON"
+            state_sw.get(rm)["sw2"] = "ON"
+            state_sw.get(rm)["sw3"] = "ON"   
      if Statedata_Selected == "Open":
         state_sw.get(Control_Selected)["sw1"] = "ON"
-        state_sw.get(Control_Selected)["sw2"] = "ON"
-        state_sw.get(Control_Selected)["sw3"] = "ON" 
-     if Statedata_Selected == "Close":
-        state_sw.get(Control_Selected)["sw1"] = "OFF"
         state_sw.get(Control_Selected)["sw2"] = "OFF"
+        state_sw.get(Control_Selected)["sw3"] = "OFF" 
+     if Statedata_Selected == "Close":
+        state_sw.get(Control_Selected)["sw1"] = "OF"
+        state_sw.get(Control_Selected)["sw2"] = "ON"
         state_sw.get(Control_Selected)["sw3"] = "OFF" 
 
      #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -118,7 +134,35 @@ def speech_assistant_ai():
 def datagetrequest():
     
      return jsonify(state_sw)
+@app.route("/Manualswitch",methods=['GET','POST'])
+def manual_switch():
+     req_sw = request.get_json(force=True)
+     print("Status_sw",req_sw)
+     print("Current status",state_sw)
+     room = req_sw.get("Room")
+     status_sw = req_sw.get("status") 
+     if room  in roomlist:
+        if state_sw[room][status_sw] == "ON":
+          print(state_sw[room],"Turning OFF")
+          state_sw[room][status_sw] = "OFF"
+        else:
+            print(state_sw[room],"Turning OFF")
+            state_sw[room][status_sw] = "ON" 
+     
+     if room not in roomlist:
+         if state_sw[room]["sw1"] == "ON":
+             
+             state_sw[room]["sw1"] = "OFF"
+             state_sw[room]["sw2"] = "ON"
+         else:
+             state_sw[room]["sw1"] = "ON"
+             state_sw[room]["sw2"] = "OFF"
+     
+     return jsonify(req_sw)
+@app.route("/settingsystem")
+def settings_system():
 
+     return render_template("settingsys.html")
 if __name__ == "__main__":
 
        app.run(ssl_context='adhoc',debug=True,threaded=True,host="0.0.0.0",port=5899)
