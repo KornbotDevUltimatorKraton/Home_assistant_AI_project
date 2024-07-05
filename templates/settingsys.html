@@ -59,7 +59,7 @@
   <nav class="rad-sidebar">
     <ul>
       <li>
-        <a onclick="dashboardsensor();" class="inbox">
+        <a onclick="Homeassistant();" class="inbox">
           <i class="fa fa-home"><span class="icon-bg rad-bg-success"></span></i>
           <span class="rad-sidebar-item">Home Assistant AI</span>
         </a>
@@ -74,7 +74,7 @@
       </li> -->
       
       <li><a onclick="Sensordata();" class="done"><i class="fa fa-dashboard"><span class="icon-bg rad-bg-warning"></span></i><span class="rad-sidebar-item">Sensor dashboard</span></a></li>
-      <li><a href="#"><i class="fa fa-wrench"><span class="icon-bg rad-bg-violet"></span></i><span class="rad-sidebar-item">Settings</span></a></li>
+      <li><a onclick="settingsys();" class="done"><i class="fa fa-wrench"><span class="icon-bg rad-bg-violet"></span></i><span class="rad-sidebar-item">Settings</span></a></li>
 
     </ul>
   </nav>
@@ -87,10 +87,11 @@
           <div class="col-lg-4 col-md-12 col-xs-12">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">Environment Sensor</h3>
+                <h3 class="panel-title">Home Assistant Info</h3>
               </div>
               <div class="panel-body">
-                <div id="EnvironmentSensor" class="rad-chart"></div>
+                      <p>Your home assistant name</p>
+                      <input id="datauser" value="Home Assistant">                        
               </div>
 
             </div>
@@ -98,16 +99,72 @@
           <div class="col-lg-4 col-md-6 col-xs-12">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">Motion Sensor</h3>
+                <h3 class="panel-title">Room 1 switch</h3>
               </div>
               <div class="panel-body">
-                <div id="MotionSensor" class="rad-chart"></div>
+                  <button onclick="room1(1);">ON/OFF </button>
+                  <button onclick="room1(2);">ON/OFF </button>
+                  <button onclick="room1(3);">ON/OFF </button>
               </div>
 
             </div>
           </div>
-       
+         <div class="col-lg-4 col-md-6 col-xs-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Room 2 switch</h3>
+              </div>
+              <div class="panel-body">
+                  <button onclick="room2(1);">ON/OFF </button>
+                  <button onclick="room2(2);">ON/OFF </button>
+                  <button onclick="room2(3);">ON/OFF </button>
+              </div>
+
+            </div>
+          </div>
+         <div class="col-lg-4 col-md-6 col-xs-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Room 3 switch</h3>
+              </div>
+              <div class="panel-body">
+                  <button onclick="room3(1);">ON/OFF </button>
+                  <button onclick="room3(2);">ON/OFF </button>
+                  <button onclick="room3(3);">ON/OFF </button>
+              </div>
+
+            </div>
+          </div>
           <div class="col-lg-4 col-md-6 col-xs-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Room 4 switch</h3>
+              </div>
+              <div class="panel-body">
+                  <button onclick="room4(1);">ON/OFF </button>
+                  <button onclick="room4(2);">ON/OFF </button>
+                  <button onclick="room4(3);">ON/OFF </button>
+              </div>
+
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 col-xs-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Door 1 switch</h3>
+              </div>
+              <div class="panel-body">
+                  <button onclick="door1(1);">Open/Close </button>
+                 
+              </div>
+
+            </div>
+          </div>
+
+
+
+
+          <!--<div class="col-lg-4 col-md-6 col-xs-12">
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h3 class="panel-title">Biometric Sensor</h3>
@@ -116,7 +173,7 @@
                 <div id="PolarChart" class="rad-chart"></div>
               </div>
             </div>
-          </div>
+          </div>-->
          
         </div>
 
@@ -137,13 +194,60 @@
 <script src='//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js'></script>
 <script  src="static/script.js"></script>
 <script type="text/javascript">
+  function fetching_switch(room,status){
+       console.log("Argument",room,status);          
+       fetch('/Manualswitch', {
+
+          // Declare what type of data we're sending
+       headers: {
+           'Content-Type': 'application/json'
+       },
+
+       // Specify the method
+       method: 'POST',
+       // A JSON payload
+       body: JSON.stringify({
+            "Room":room,"status": status
+       })
+       }).then(function (response) { // At this point, Flask has printed our JSON
+       return response.text();
+        }).then(function (text) {
+           console.log('POST response: ');
+           // Should be 'OK' if everything was successful
+           console.log(text);
+        });
+  }
   function Sensordata(){
      window.location.href = "https://192.168.50.55:5899/Sensordashboard";
 
   }
-  function dashboardsensor(){
+  function Homeassistant(){
     window.location.href = "https://192.168.50.55:5899/";
   }  
+  function settingsys(){
+    window.location.href = "https://192.168.50.55:5899/settingsystem" 
+  }
+  function room1(datasw){
+        console.log("Switch "+datasw+","+"room1");
+        fetching_switch("Room1","sw"+String(datasw)); 
+  }
+  function room2(datasw){
+        console.log("Switch "+datasw+","+"room2");
+        fetching_switch("Room2","sw"+String(datasw));
+  }
+  function room3(datasw){
+        console.log("Switch "+datasw+","+"room3");
+        fetching_switch("Room3","sw"+String(datasw));
+  }
+  function room4(datasw){
+        console.log("Switch "+datasw+","+"room4");
+        fetching_switch("Room4","sw"+String(datasw));
+  }
+  function door1(datasw){
+        console.log("Switch "+datasw+","+"door1");
+        fetching_switch("Door1","sw"+String(datasw));
+  }
+
 </script>
 </body>
 </html>

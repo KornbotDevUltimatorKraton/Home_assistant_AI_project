@@ -60,7 +60,7 @@
   <nav class="rad-sidebar">
     <ul>
       <li>
-        <a href="#" class="inbox">
+        <a onclick="Homeassistant();" class="inbox">
           <i class="fa fa-home"><span class="icon-bg rad-bg-success"></span></i>
           <span class="rad-sidebar-item">Home Assistant AI</span>
         </a>
@@ -76,7 +76,7 @@
       <!--Tricker the link from the javascript to passing the argument data for the profile page instead of using href-->
       <li><a onclick="Sensordata();" class="done"><i class="fa fa-dashboard"><span class="icon-bg rad-bg-warning"></span></i><span class="rad-sidebar-item">Sensor dashboard</span></a></li>
      
-      <li><a href="#"><i class="fa fa-wrench"><span class="icon-bg rad-bg-violet"></span></i><span class="rad-sidebar-item">Settings</span></a></li>
+      <li><a onclick="settingsys();" class="done"><i class="fa fa-wrench"><span class="icon-bg rad-bg-violet"></span></i><span class="rad-sidebar-item">Settings</span></a></li>
      
     </ul>
   </nav>
@@ -113,9 +113,13 @@
          window.location.href = "https://192.168.50.55:5899/Sensordashboard";
 
       }
-      function dashboardsensor(){
+      function Homeassistant(){
         window.location.href = "https://192.168.50.55:5899/";     //Change into AI link URL 
       }  
+     function settingsys(){
+       window.location.href = "https://192.168.50.55:5899/settingsystem"
+     }
+
 </script>
 </body>
 </html>
