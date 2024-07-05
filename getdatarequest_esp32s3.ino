@@ -84,7 +84,7 @@ void loop() {
   if(String(sw1_status) == "OFF"){
      Serial.println("Trigger sw1 Relay");
      relay1state = HIGH;
-     digitalWrite(Relay_pin1,relay2state);
+     digitalWrite(Relay_pin1,relay1state);
   };
 
   if(String(sw2_status) == "ON"){
