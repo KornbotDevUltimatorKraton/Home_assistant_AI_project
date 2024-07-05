@@ -2,8 +2,8 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 // Replace with your network credentials
-const char* ssid = "Idatabots";
-const char* password = "Rkl3548123#";
+const char* ssid = "";
+const char* password = "";
 
 // Replace with your desired URL
 const char* url = "https://192.168.50.55:5899/dataget";
