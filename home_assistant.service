@@ -1,0 +1,15 @@
+[Unit]
+Description=Home_Automation
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/Home_assistant_ai/app.py
+WorkingDirectory=/home/pi/Home_assistant_ai	
+Restart=always
+RestartSec=3
+User=root
+Group=root
+Environment="PYTHONPATH=/usr/local/lib/python3.12/site-packages:/usr/lib/python3.12/site-packages"
+
+[Install]
+WantedBy=multi-user.target
